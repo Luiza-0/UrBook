@@ -1,8 +1,10 @@
 import { StatusBar, SafeAreaView, View } from 'react-native';
 import { useFonts, Palanquin_100Thin, Palanquin_600SemiBold } from '@expo-google-fonts/palanquin';
 
+
 import Initial from './src/telas/Initial';
 import Home from './src/telas/Home';
+import DetalhesLivro from './src/telas/DetalhesLivro';
 
 export default function App() {
   const[fontCarregada] = useFonts({
@@ -14,10 +16,10 @@ export default function App() {
     return <View/>;
   }else{
     return (
-      <SafeAreaView>
+      <><SafeAreaView>
         <StatusBar />
         <Home />
-      </SafeAreaView>
+      </SafeAreaView></>
     );
   }
 }

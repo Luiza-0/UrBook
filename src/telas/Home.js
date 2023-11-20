@@ -1,14 +1,35 @@
-import React from 'react';
-import { View, Image, Text, TextInput, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Image, Text, TextInput, StyleSheet, Button, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
+import api from './api';
+import LivroComponent from '../componentes/LivroComponent';
+import ListaCategorias from '../componentes/ListaCategorias';
 
 import topo from '../../assets/topo-2.png';
-import sugestao from '../../assets/sug.png';
 
 const width = Dimensions.get('screen').width;
 
-export default function Home() {
+export default function Home({ navigation }) {
+  const [livros, setLivros] = useState([]);
+  const [consulta, setConsulta] = useState('');
+
+  const buscarLivros = async () => {
+    try {
+      const response = await api.get('/volumes', {
+        params: {
+          q: consulta,
+        },
+      });
+
+      setLivros(response.data.items);
+    } catch (error) {
+      console.error('Erro ao buscar livros:', error);
+    }
+  };
+
+   
+
   return (
-    <>
+    <ScrollView contentContainerStyle={estilos.scrollContainer}>
       <View style={estilos.back}>
         <View style={estilos.topo}>
           <Text style={estilos.topoT}>
@@ -18,49 +39,27 @@ export default function Home() {
           </Text>
           <Image source={topo} style={estilos.imgTopo} />
         </View>
-
         <View style={estilos.container}>
           <TextInput
             style={estilos.input}
-            placeholder="game of thrones, a culpa é das estrelas..."
+            placeholder="Pesquise por livros..."
+            onChangeText={(texto) => setConsulta(texto)}
           />
+          <Button title="Buscar Livros" onPress={buscarLivros} />
         </View>
 
-        <View style={estilos.sugestao}>
-          <Text style={[estilos.title, estilos.titleLeft]}>Sugestão da Semana</Text>
-
-          <View style={estilos.sugestaoPrincipal}>
-            <View style={estilos.livroColuna}>
-              <Image source={sugestao} style={estilos.sugestaoLivro} />
-            </View>
-
-              <View style={estilos.infoColuna}>
-
-                <Text style={estilos.nomeLivroHome}>VOVÓ VIROU SEMENTE</Text>
-
-                <View style={estilos.nomeAnoContainer}>
-                  <Text style={estilos.nomeAutorHome}>Rodrigo Ciriaco</Text>
-                  <Text style={estilos.anoLivroHome}>2019</Text>
-                </View>
-
-                <View style={estilos.descLivro}>
-                  <Text style={estilos.descLivroHome}>
-                    Luiza passava as tardes ouvindo histórias de sua avó, de como nos comunicamos com a natureza e somos parte dela. Até que um vírus atravessa sua existência...
-                  </Text>
-                </View>
-              </View>
-          </View>
-        </View>
-
-        <View>
-          <View>
-
-          </View>
+        
+      
+        <View style={estilos.categorias}>
+          <Text style={[estilos.title, estilos.titleLeft]}>Categorias</Text>
+          <ListaCategorias />
+          {/* Display the LivroComponent with the randomly selected livroId */}
         </View>
       </View>
-    </>
+    </ScrollView>
   );
 }
+
 
 const estilos = StyleSheet.create({
   back: {
@@ -182,5 +181,14 @@ const estilos = StyleSheet.create({
     alignSelf: 'center',
   },
 
+  scrollContainer: {
+    flexGrow: 1,
+  },
 
+  categorias:{
+    justifyContent: 'center',
+    marginTop: 40,
+    marginStart: 20,
+    marginBottom:40,
+  }
 });

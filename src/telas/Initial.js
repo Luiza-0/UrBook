@@ -1,5 +1,5 @@
 import React from 'react';
-import {ImageBackground,  StyleSheet, Image, Dimensions, Text, View } from 'react-native';
+import {ImageBackground,  StyleSheet, Image, Dimensions, View, TouchableOpacity, Text } from 'react-native';
 
 import cadeira from '../../assets/cadeira.png';
 import title from '../../assets/titulo.png';
@@ -14,6 +14,12 @@ export default function Home(){
         <ImageBackground source={back} style={estilos.back}>
             <Image source={cadeira} style={estilos.cadeira}/>
             <Image source={title} style={estilos.title}/>
+            <TouchableOpacity
+        style={estilos.botao}
+        onPress={() => console.log('Botão pressionado')}
+      >
+        <Text style={estilos.textoBotao}>Clique</Text>
+      </TouchableOpacity>
         </ImageBackground>
     </View>
     </>
