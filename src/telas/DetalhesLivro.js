@@ -1,47 +1,35 @@
 // DetalhesLivro.js
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
-import img from '../../assets/estatic.png'
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Button, ScrollView, Image } from 'react-native';
+import {addLivros } from '../database/BookStorage';
 
-export default function DetalhesLivro() {
+export default function DetalhesLivro({ route }) {
+  const [livros, setLivros] = useState([]);
+  const { livro } = route.params;
+
+
+  const handleAddLivro = async (livro) => {
+    try {
+      await addLivros(livro);
+      console.log('Livro adicionado com sucesso.');
+    } catch (error) {
+      console.error('Erro ao adicionar livro:', error);
+    }
+  };
 
   return (
     <ScrollView style={estilos.back} contentContainerStyle={estilos.scrollContainer}>
-        <View style={estilos.container}>
+      <View style={estilos.container}>
         <Text>Detalhes do Livro ID </Text>
-        <Image source={img} style={estilos.capa} />
-        <Text></Text>
-        </View>
+        <Image source={{ uri: livro?.volumeInfo?.imageLinks?.thumbnail }} style={estilos.capa} />
+        <Text>{livro?.volumeInfo?.title}</Text>
+        <Text>{livro?.volumeInfo?.description}</Text>
+        <Button title="Já leu" onPress={() => handleAddLivro(livro)} />
+      </View>
     </ScrollView>
   );
-  }
+}
 
-    const estilos = StyleSheet.create({
-        scrollContainer: {
-            flexGrow:1,
-        }, 
-        back: {
-            width: '100%',
-            height: '100%',
-            backgroundColor:'#F8F2FA',
-        },
-        container:{
-            flex:1,
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        capa: {
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 40,
-            alignSelf:'center',
-            width:330,
-            height:490,
-          },
-        
-    });
-
-
-
-
+const estilos = StyleSheet.create({
+  // ... estilos ...
+});

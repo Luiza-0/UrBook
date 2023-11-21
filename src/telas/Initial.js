@@ -1,5 +1,8 @@
 import React from 'react';
-import {ImageBackground,  StyleSheet, Image, Dimensions, View, TouchableOpacity, Text } from 'react-native';
+
+import {ImageBackground,  StyleSheet, Image, Dimensions, View, TouchableOpacity} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import cadeira from '../../assets/cadeira.png';
 import title from '../../assets/titulo.png';
@@ -7,21 +10,23 @@ import title from '../../assets/titulo.png';
 const width = Dimensions.get('screen').width;
 const back = require('../../assets/back.png');
 
-export default function Home(){
+const Stack = createStackNavigator();
+
+export default function Initial(){
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    navigation.navigate('Home');
+  };
     return <>
-    
-    <View>
+    <TouchableOpacity onPress={handlePress}>
+      <View>
         <ImageBackground source={back} style={estilos.back}>
-            <Image source={cadeira} style={estilos.cadeira}/>
-            <Image source={title} style={estilos.title}/>
-            <TouchableOpacity
-        style={estilos.botao}
-        onPress={() => console.log('Botão pressionado')}
-      >
-        <Text style={estilos.textoBotao}>Clique</Text>
-      </TouchableOpacity>
+          <Image source={cadeira} style={estilos.cadeira} />
+          <Image source={title} style={estilos.title} />
         </ImageBackground>
-    </View>
+      </View>
+    </TouchableOpacity>
     </>
 }
 
@@ -35,7 +40,6 @@ const estilos = StyleSheet.create({
         width: null,
         resizeMode: 'contain',
         height: 356,
-        //marginTop: 40
     },
     title:{
         width: null,

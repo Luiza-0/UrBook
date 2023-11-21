@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, Text, TextInput, StyleSheet, Button, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
-import api from './api';
-import LivroComponent from '../componentes/LivroComponent';
+import { View, Image, Text, TextInput, StyleSheet, Button, Dimensions, ScrollView} from 'react-native';
+import api from '../componentes/api';
 import ListaCategorias from '../componentes/ListaCategorias';
 
 import topo from '../../assets/topo-2.png';
@@ -9,24 +8,29 @@ import topo from '../../assets/topo-2.png';
 const width = Dimensions.get('screen').width;
 
 export default function Home({ navigation }) {
+  const [livro, setLivro] = useState([]);
   const [livros, setLivros] = useState([]);
   const [consulta, setConsulta] = useState('');
 
   const buscarLivros = async () => {
     try {
+      if (!consulta) {
+        return;
+      }
       const response = await api.get('/volumes', {
         params: {
           q: consulta,
         },
       });
-
       setLivros(response.data.items);
     } catch (error) {
       console.error('Erro ao buscar livros:', error);
     }
   };
-
-   
+ 
+  useEffect(() => {
+    buscarLivros();
+  }, [consulta]);
 
   return (
     <ScrollView contentContainerStyle={estilos.scrollContainer}>
@@ -53,12 +57,11 @@ export default function Home({ navigation }) {
         <View style={estilos.categorias}>
           <Text style={[estilos.title, estilos.titleLeft]}>Categorias</Text>
           <ListaCategorias />
-          {/* Display the LivroComponent with the randomly selected livroId */}
         </View>
       </View>
     </ScrollView>
   );
-}
+};
 
 
 const estilos = StyleSheet.create({
@@ -171,7 +174,7 @@ const estilos = StyleSheet.create({
   },
   descLivro:{
     backgroundColor: '#FFF',
-    borderRadius: 9, // Define o arredondamento do fundo branco
+    borderRadius: 9,
     width:'100%',
   },
   descLivroHome: {
